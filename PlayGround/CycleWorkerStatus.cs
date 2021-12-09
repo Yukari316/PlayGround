@@ -1,7 +1,12 @@
 ﻿namespace PlayGround;
 
-public struct CycleWorkerStatus
+public struct CycleWorkerStatus< T >
 {
+    /// <summary>
+    /// 总共错误数（异常数+用户定义的错误计数）
+    /// </summary>
+    public int TotalErrCount => ErrorCount + ExceptionCount;
+
     /// <summary>
     /// 错误计数
     /// 由用户控制
@@ -30,12 +35,26 @@ public struct CycleWorkerStatus
     public CycleWorkerState State { get; internal set; }
 
     /// <summary>
-    /// 清空计数器
+    /// 用户自定义的工作数据
+    /// </summary>
+    public T WorkParameter { get; set; }
+
+    /// <summary>
+    /// 清空所有计数器（内部函数，外部调用无效）
     /// </summary>
     public void ClearCount()
     {
-        ErrorCount     = 0;
-        CycleCount     = 0;
+        ErrorCount = 0;
+        CycleCount = 0;
+        ExceptionCount = 0;
+    }
+
+    /// <summary>
+    /// 清空错误计数器（内部函数，外部调用无效）
+    /// </summary>
+    public void ClearError()
+    {
+        ErrorCount = 0;
         ExceptionCount = 0;
     }
 }
