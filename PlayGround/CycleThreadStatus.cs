@@ -1,6 +1,6 @@
 ﻿namespace PlayGround;
 
-public struct CycleWorkerStatus< T >
+public struct CycleThreadStatus<T>
 {
     /// <summary>
     /// 总共错误数（异常数+用户定义的错误计数）
@@ -32,7 +32,7 @@ public struct CycleWorkerStatus< T >
     /// <summary>
     /// 状态
     /// </summary>
-    public CycleWorkerState State { get; internal set; }
+    public CycleThreadState State { get; internal set; }
 
     /// <summary>
     /// 用户自定义的工作数据
@@ -44,8 +44,8 @@ public struct CycleWorkerStatus< T >
     /// </summary>
     public void ClearCount()
     {
-        ErrorCount = 0;
-        CycleCount = 0;
+        ErrorCount     = 0;
+        CycleCount     = 0;
         ExceptionCount = 0;
     }
 
@@ -54,7 +54,7 @@ public struct CycleWorkerStatus< T >
     /// </summary>
     public void ClearError()
     {
-        ErrorCount = 0;
+        ErrorCount     = 0;
         ExceptionCount = 0;
     }
 }
