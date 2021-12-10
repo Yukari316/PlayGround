@@ -187,9 +187,11 @@ public class CycleWorker<TData> : IDisposable
             case CycleThreadState.Running:
                 throw new InvalidOperationException("thread is already running!");
             case CycleThreadState.Interrupted:
+                _status.State = CycleThreadState.Running;
                 _restartSemaphore.Release();
                 break;
             case CycleThreadState.Stopped:
+                _status.State = CycleThreadState.Running;
                 if (_isExecuted) ClearContext();
                 else _isExecuted = true;
                 _workerThread.Start();
@@ -197,8 +199,6 @@ public class CycleWorker<TData> : IDisposable
             case CycleThreadState.Disposed:
                 throw new InvalidOperationException("thread is already disposed!");
         }
-
-        _status.State = CycleThreadState.Running;
         // var sb = new StringBuilder();
         // sb.AppendLine("--------------------------");
         // sb.AppendLine($"th {_workerThread.ManagedThreadId} start");
@@ -233,7 +233,6 @@ public class CycleWorker<TData> : IDisposable
             case CycleThreadState.Disposed:
                 throw new InvalidOperationException("thread is already disposed!");
         }
-
         _status.State = CycleThreadState.Interrupted;
     }
 
@@ -246,6 +245,7 @@ public class CycleWorker<TData> : IDisposable
         switch (_status.State)
         {
             case CycleThreadState.Interrupted:
+                _status.State = CycleThreadState.Stopped;
                 _restartSemaphore.Release();
                 break;
             case CycleThreadState.Stopped:
@@ -253,8 +253,6 @@ public class CycleWorker<TData> : IDisposable
             case CycleThreadState.Disposed:
                 throw new InvalidOperationException("thread is already disposed!");
         }
-
-        _status.State = CycleThreadState.Stopped;
         ClearContext();
     }
 
@@ -267,13 +265,12 @@ public class CycleWorker<TData> : IDisposable
         switch (_status.State)
         {
             case CycleThreadState.Interrupted:
+                _status.State = CycleThreadState.Disposed;
                 _restartSemaphore.Release();
                 break;
             case CycleThreadState.Disposed:
                 throw new InvalidOperationException("thread is already disposed!");
         }
-
-        _status.State = CycleThreadState.Disposed;
         ClearContext(false);
         GC.SuppressFinalize(this);
     }
