@@ -5,7 +5,7 @@ namespace PlayGround;
 
 internal class FuckNcm
 {
-    public static async ValueTask<(bool success, string message)> FuckNcmFile(string path, string outPath)
+    public static async Task<(bool success, string message)> FuckNcmFile(string path, string outPath)
     {
         await using var ms = new MemoryStream(await File.ReadAllBytesAsync(path));
 
@@ -13,34 +13,41 @@ internal class FuckNcm
         if (!ms.CheckHeader())
             return (false, "not a ncm file");
 
+        var fileName = Path.GetFileNameWithoutExtension(path);
+
+        Console.WriteLine($"paesing file[{fileName}]...");
+
         ms.Seek(2, SeekOrigin.Current);
 
         //keybox
         byte[] box = ms.MakeKeyBox();
+        Console.WriteLine($"get key box({box.Length})");
 
         //metainfo
         NetEaseMetaInfo meta = ms.ReadMeta();
-
+        Console.WriteLine("get metainfo");
         //ext name
         string ext = string.IsNullOrEmpty(meta.Format)
             ? "mp3"
             : meta.Format;
 
-        var fileName = $"{Path.GetFileNameWithoutExtension(path)}.{ext}";
+        var fullFileName = $"{fileName}.{ext}";
 
         //file exists
-        if (File.Exists($@"{outPath.Trim()}\{fileName}")) return (false, "File exists");
+        if (File.Exists($@"{outPath.Trim()}\{fullFileName}")) return (false, "File exists");
 
         //crc32
         var crc32bytes = new byte[4];
         ms.Read(crc32bytes, 0, crc32bytes.Length);
         var crc32hash = $"0x{BitConverter.ToString(crc32bytes).Replace("-", string.Empty)}";
+        Console.WriteLine($"get crc32({crc32hash})");
 
         //skip 5 character, 
         ms.Seek(5, SeekOrigin.Current);
 
         //cover
         uint imageLen = ms.ReadUint32();
+        Console.WriteLine($"get cover image({imageLen})");
 
         //cover
         byte[] imageBytes = new byte[imageLen];
@@ -48,9 +55,11 @@ internal class FuckNcm
 
         //audio
         byte[] audioBytes = ms.ReadAudio(box);
+        Console.WriteLine($"get audio({audioBytes.Length})");
 
         //保存文件
-        var outFilePath = $@"{outPath.Trim('\\')}\{fileName}";
+        Console.WriteLine("saving music...");
+        var outFilePath = $@"{outPath.Trim('\\')}\{fullFileName}";
         await File.WriteAllBytesAsync(outFilePath, audioBytes);
 
         //写入tag
@@ -76,8 +85,9 @@ internal class FuckNcm
             tag.Tag.Pictures = new IPicture[] {coverPic};
         }
 
+        Console.WriteLine("saving music tags...");
         tag.Save();
 
-        return (true, $"{fileName}[{crc32hash}]");
+        return (true, $"{fullFileName}[{crc32hash}]");
     }
 }

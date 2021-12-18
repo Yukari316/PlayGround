@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PlayGround": {
+      "commandName": "Project",
+      "commandLineArgs": "-i D:\\CloudMusic\\DL -o D:\\Test -sync"
+    }
+  }
+}
