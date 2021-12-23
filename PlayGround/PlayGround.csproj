@@ -9,6 +9,14 @@
 
   <ItemGroup>
     <PackageReference Include="GenFu" Version="1.6.0" />
+    <PackageReference Include="Microsoft.Graph" Version="4.13.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="client.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
