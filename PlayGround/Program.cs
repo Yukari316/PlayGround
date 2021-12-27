@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.Graph;
 
 namespace PlayGround;
@@ -21,14 +22,13 @@ public static class Program
                     return Task.CompletedTask;
                 }));
 
-        Console.WriteLine("Get root items...");
-        var rootItems = await graphClient.Me.Drive.Root.Children.Request().GetAsync();
         Console.WriteLine("Get Pixiv dir...");
-        var pixivDir = rootItems.CurrentPage.First(i => i.Name == "Pixiv");
-        Console.WriteLine("Get Pixiv dir items...");
-        var dirItems = await graphClient.Me.Drive.Items[pixivDir.Id].Children.Request().GetAsync();
+        var picItem = await graphClient.Me.Drive.Root.ItemWithPath("/Pixiv/20977495_p0.jpg").Request().GetAsync();
 
-        Console.WriteLine("holy shit");
-        return;
+        var dlInfo = ((JsonElement) picItem.AdditionalData["@microsoft.graph.downloadUrl"]).GetString();
+
+        Console.WriteLine(dlInfo);
+
+        await Task.Delay(-1);
     }
 }
