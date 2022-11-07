@@ -1,6 +1,7 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Newtonsoft.Json;
 using PlayGround.Properties;
 
 namespace PlayGround;
@@ -10,17 +11,22 @@ public static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        DateTime s = DateTime.Now;
-        //音频读取
-        NcmFileInfo ncmFile = FuckNcm.FuckNcmFile(args[0]);
+        Test s = new Test { DD = 213314 };
 
-        //await using AudioFileReader reader = new AudioFileReader(args[0]);
-        StreamMediaFoundationReader reader = new StreamMediaFoundationReader(ncmFile.DataStream);
-        // WaveFileReader              reader = new WaveFileReader(ncmFile.DataStream);
+        Console.WriteLine(JsonConvert.SerializeObject(s));
+
+        // DateTime s = DateTime.Now;
+        // //音频读取
+        // // NcmFileInfo ncmFile = FuckNcm.FuckNcmFile(args[0]);
+        //
+        // using AudioFileReader reader = new(args[0]);
+        // // StreamMediaFoundationReader reader = new StreamMediaFoundationReader(ncmFile.DataStream);
+        // // WaveFileReader              reader = new WaveFileReader(ncmFile.DataStream);
         // reader.Volume = 0.05f;
         // Console.WriteLine($"time:{reader.TotalTime}");
         // Console.WriteLine($"file format:{reader.WaveFormat}");
         // Console.WriteLine($"br:{reader.Length * .008 / reader.TotalTime.TotalSeconds}");
+
 
         //重采样
         // WaveFormat waveFormat = new WaveFormat(384000, reader.WaveFormat.BitsPerSample, reader.WaveFormat.Channels);
@@ -38,7 +44,7 @@ public static class Program
 
         // AsioOut asioDevice = new AsioOut("ASIO Combo384 Driver");
         // asioDevice.InputChannelOffset = asioDevice.DriverInputChannelCount;
-        // asioDevice.Init(mfResampler);
+        // asioDevice.Init(wdlResampler);
         // DateTime e = DateTime.Now;
         // Console.WriteLine();
         // Console.WriteLine($"time = {(e - s).TotalMilliseconds} ms");
@@ -50,14 +56,27 @@ public static class Program
 
         // var enumerator = new MMDeviceEnumerator();
         // foreach (MMDevice wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
-        //     Console.WriteLine($"{wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
+        // {
+        //     Console.WriteLine($"{wasapi.DataFlow} | {wasapi.FriendlyName} | {wasapi.DeviceFriendlyName} | {wasapi.State} | {wasapi.ID}");
+        //     Guid id = Guid.Parse(wasapi.ID.Split("}.{")[1][..^1]);
+        //     Console.WriteLine(id);
+        // }
         //
-        using WasapiOut wasapiOut = new WasapiOut();
-        wasapiOut.Init(reader);
-        wasapiOut.Play();
-        DateTime e = DateTime.Now;
-        Console.WriteLine(wasapiOut.OutputWaveFormat);
-        Console.WriteLine($"time = {(e - s).TotalMilliseconds} ms");
+        // ;
+        //
+        // WasapiOut wasapiOut = new WasapiOut();
+        // wasapiOut.Init(wdlResampler);
+        // wasapiOut.Play();
+        //
+        // DateTime e = DateTime.Now;
+        // Console.WriteLine(wasapiOut.OutputWaveFormat);
+        // Console.WriteLine($"time = {(e - s).TotalMilliseconds} ms");
+        // Console.ReadKey();
+        // wasapiOut.Dispose();
+        // Console.ReadKey();
+        // wasapiOut = new WasapiOut();
+        // wasapiOut.Init(wdlResampler);
+        // wasapiOut.Play();
 
         #endregion
 
@@ -88,21 +107,21 @@ public static class Program
         //     dsOutDevice.Add(dev.Guid);
         //     Console.WriteLine($"{dev.Guid} {dev.ModuleName} {dev.Description}");
         // }
-        //
-        // using DirectSoundOut drOut = new DirectSoundOut();
-        // drOut.Init(reader);
+        // //
+        // using var drOut = new DirectSoundOut();
+        // drOut.Init(wdlResampler);
         // drOut.Play();
 
         #endregion
 
 
-        while (true)
-        {
-            Console.ReadKey();
-            // stream.Volume -= 0.001f;
-            Console.WriteLine("v -0.001");
-            // Console.WriteLine($"v ={stream.Volume}");
-        }
+        // while (true)
+        // {
+        //     Console.ReadKey();
+        //     reader.Volume -= 0.001f;
+        //     Console.WriteLine("v -0.001");
+        //     Console.WriteLine($"v ={reader.Position}");
+        // }
         // Console.ReadKey();
     }
 }
