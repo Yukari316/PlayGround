@@ -256,9 +256,4 @@ __pycache__/
 /Native.Sdk/Cqp.Tool
 /Native.Csharp/Sdk.Cqp/Api/CnApi.cs
 Lib/
-/GO
-/GO2
-Sora/Sora.xml
-
-#vscode
-.vscode/
+Skadi/Properties/launchSettings.json
