@@ -11,28 +11,24 @@ public static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Test s = new Test { DD = 213314 };
-
-        Console.WriteLine(JsonConvert.SerializeObject(s));
-
-        // DateTime s = DateTime.Now;
-        // //音频读取
-        // // NcmFileInfo ncmFile = FuckNcm.FuckNcmFile(args[0]);
-        //
+        foreach (string s1 in args)
+        {
+            Console.WriteLine(s1);
+        }
+        DateTime s = DateTime.Now;
+        //音频读取
+        NcmFileInfo ncmFile = FuckNcm.FuckNcmFile(args[0]);
+        
         // using AudioFileReader reader = new(args[0]);
-        // // StreamMediaFoundationReader reader = new StreamMediaFoundationReader(ncmFile.DataStream);
-        // // WaveFileReader              reader = new WaveFileReader(ncmFile.DataStream);
-        // reader.Volume = 0.05f;
-        // Console.WriteLine($"time:{reader.TotalTime}");
-        // Console.WriteLine($"file format:{reader.WaveFormat}");
-        // Console.WriteLine($"br:{reader.Length * .008 / reader.TotalTime.TotalSeconds}");
+        StreamMediaFoundationReader reader = new(ncmFile.DataStream);
+        // WaveFileReader              reader = new WaveFileReader(ncmFile.DataStream);
 
 
         //重采样
-        // WaveFormat waveFormat = new WaveFormat(384000, reader.WaveFormat.BitsPerSample, reader.WaveFormat.Channels);
+        WaveFormat waveFormat = new WaveFormat(384000, reader.WaveFormat.BitsPerSample, reader.WaveFormat.Channels);
 
         //Media Foundation Resampler
-        // using MediaFoundationResampler mfResampler = new(reader, waveFormat);
+        using MediaFoundationResampler mfResampler = new(reader, waveFormat);
 
         //Wdl Resampling Sample Provider
         // WdlResamplingSampleProvider wdlResampler = new(reader, 384000);
@@ -64,21 +60,17 @@ public static class Program
         //
         // ;
         //
-        // WasapiOut wasapiOut = new WasapiOut();
-        // wasapiOut.Init(wdlResampler);
-        // wasapiOut.Play();
-        //
-        // DateTime e = DateTime.Now;
-        // Console.WriteLine(wasapiOut.OutputWaveFormat);
-        // Console.WriteLine($"time = {(e - s).TotalMilliseconds} ms");
-        // Console.ReadKey();
-        // wasapiOut.Dispose();
-        // Console.ReadKey();
-        // wasapiOut = new WasapiOut();
-        // wasapiOut.Init(wdlResampler);
-        // wasapiOut.Play();
+        WasapiOut wasapiOut = new WasapiOut();
+        wasapiOut.Init(mfResampler);
+        wasapiOut.Play();
+        wasapiOut.Volume = 0.01f;
 
-        #endregion
+        DateTime e = DateTime.Now;
+        Console.WriteLine(wasapiOut.OutputWaveFormat);
+        Console.WriteLine($"time = {(e - s).TotalMilliseconds} ms");
+        Console.ReadKey();
+
+#endregion
 
 
         #region WaveOut API
