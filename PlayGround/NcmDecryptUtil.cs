@@ -19,7 +19,7 @@ internal static class NcmDecryptUtil
     internal static bool CheckHeader(this MemoryStream ms)
     {
         byte[] header = new byte[8];
-        ms.Read(header, 0, 8);
+        _ = ms.Read(header, 0, 8);
         return Encoding.UTF8.GetString(header) == "CTENFDAM";
     }
 
@@ -30,7 +30,7 @@ internal static class NcmDecryptUtil
 
         //raw keybox data
         byte[] buffer = new byte[keyboxLen];
-        ms.Read(buffer, 0, buffer.Length);
+        _ = ms.Read(buffer, 0, buffer.Length);
         for (int i = 0; i < buffer.Length; i++)
             buffer[i] ^= 0x64;
 
@@ -58,7 +58,7 @@ internal static class NcmDecryptUtil
     {
         uint   metaLen = ms.ReadUint32();
         byte[] buffer  = new byte[metaLen];
-        ms.Read(buffer, 0, buffer.Length);
+        _ = ms.Read(buffer, 0, buffer.Length);
         buffer = buffer.Skip(22).ToArray();
         for (int i = 0; i < buffer.Length; i++)
             buffer[i] ^= 0x63;

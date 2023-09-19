@@ -4,12 +4,14 @@ public static class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        //TODO 控制台进度条
-        _ = args.GetParameter("i", out string? inputPath);
-        bool hasOutput   = args.GetParameter("o", out string? outPath);
-        bool copyAllFile = args.GetFlag("sync");
-
-        if (!hasOutput) outPath = Path.GetDirectoryName(inputPath ?? "");
+        if (args.Length != 1)
+        {
+            return -1;
+        }
+        string inputPath = args[0];
+        string outPath = $"{Environment.CurrentDirectory}/output";
+        if (!Directory.Exists(outPath))
+            Directory.CreateDirectory(outPath);
 
         if (!(!string.IsNullOrEmpty(inputPath) && !string.IsNullOrEmpty(outPath)))
         {
@@ -52,25 +54,14 @@ public static class Program
         //Dir
         string[] fileNames = Directory.GetFiles(inputPath);
 
-        var count = 1;
+        int count = 1;
 
         foreach (string fileName in fileNames)
         {
             (bool success, string msg) = 
                 await FuckNcm.FuckNcmFile(fileName, outPath);
             Console.WriteLine($"fuck ncm[{count++}/{fileNames.Length}]");
-            if(success) Console.WriteLine($"ncm dump success[{msg}]");
-            else
-            {
-                Console.WriteLine($"file [{fileName}] dump error({msg})");
-                if (copyAllFile)
-                {
-                    Console.WriteLine("copy file to output dir");
-                    string outputFile = $@"{outPath.Trim('\\')}\{Path.GetFileName(fileName)}";
-                    File.Copy(fileName, outputFile);
-                }
-                else Console.WriteLine("ignore");
-            }
+            Console.WriteLine(success ? $"ncm dump success[{msg}]" : $"file [{fileName}] dump error({msg})");
         }
 
         Console.WriteLine($"ncm dump success[{outPath}]");
