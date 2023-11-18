@@ -8,7 +8,7 @@ namespace PlayGround;
 internal struct NetEaseMetaInfo
 {
     [JsonProperty(PropertyName = "musicId", NullValueHandling = NullValueHandling.Ignore)]
-    public int MusicId { get; set; }
+    public string MusicId { get; set; }
 
     [JsonProperty(PropertyName = "musicName", NullValueHandling = NullValueHandling.Ignore)]
     public string MusicName { get; set; }

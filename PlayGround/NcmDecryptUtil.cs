@@ -65,7 +65,6 @@ internal static class NcmDecryptUtil
 
         buffer = Convert.FromBase64String(Encoding.UTF8.GetString(buffer));
         string metaJsonStr = Encoding.UTF8.GetString(buffer.DecryptAES(MetaKey)).Replace("music:", string.Empty);
-        //var json        = JObject.Parse(metaJsonStr);
         return JObject.Parse(metaJsonStr).ToObject<NetEaseMetaInfo>();
     }
 
