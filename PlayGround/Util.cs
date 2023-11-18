@@ -8,7 +8,7 @@ internal static class Util
     internal static uint ReadUint32(this MemoryStream ms, int offset = 0)
     {
         byte[] buffer = new byte[4];
-        ms.Read(buffer, offset, buffer.Length);
+         _ = ms.Read(buffer, offset, buffer.Length);
         return BitConverter.ToUInt32(buffer);
     }
 
@@ -39,24 +39,5 @@ internal static class Util
         {
             return (false, Array.Empty<byte>());
         }
-    }
-
-    internal static bool GetParameter<T>(this string[] args, string key, out T? value)
-    {
-        int keyIndex = Array.FindIndex(args, s => s == $"-{key}");
-        if(keyIndex == -1 || keyIndex+1 == args.Length)
-        {
-            value = default;
-            return false;
-        }
-
-        value = (T) Convert.ChangeType(args[keyIndex + 1], typeof(T));
-        return true;
-    }
-
-    internal static bool GetFlag(this string[] args, string key)
-    {
-        int keyIndex = Array.FindIndex(args, s => s == $"-{key}");
-        return keyIndex != -1;
     }
 }

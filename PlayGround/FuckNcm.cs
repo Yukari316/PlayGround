@@ -38,7 +38,7 @@ internal class FuckNcm
 
         //crc32
         var crc32bytes = new byte[4];
-        ms.Read(crc32bytes, 0, crc32bytes.Length);
+        _ = ms.Read(crc32bytes, 0, crc32bytes.Length);
         var crc32hash = $"0x{BitConverter.ToString(crc32bytes).Replace("-", string.Empty)}";
         Console.WriteLine($"get crc32({crc32hash})");
 
@@ -51,7 +51,7 @@ internal class FuckNcm
 
         //cover
         byte[] imageBytes = new byte[imageLen];
-        ms.Read(imageBytes, 0, imageBytes.Length);
+        _ = ms.Read(imageBytes, 0, imageBytes.Length);
 
         //audio
         byte[] audioBytes = ms.ReadAudio(box);
